@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import Home from './components/Home';
-import Mint from './components/Mint';
+import StartPage from './components/StartPage';
 import Board from './components/Board';
 
 import "./App.css";
@@ -18,9 +17,6 @@ function App() {
 	const [img2, setImg2] = useState( '' );
 	const [tank1, setTank1] = useState( '' );
 	const [tank2, setTank2] = useState( '' );
-
-	const [isMetamaskInstalled, setIsMetamaskInstalled] = useState(false);
-	const [ethereumAccount, setEthereumAccount] = useState(null);
 
 	useEffect(() => {
 		return () => {
@@ -38,17 +34,9 @@ function App() {
 			<Route
 				index
 				element={
-					<Home
-						isMetamaskInstalled = {isMetamaskInstalled} setIsMetamaskInstalled = {setIsMetamaskInstalled}
-						ethereumAccount = {ethereumAccount} setEthereumAccount = {setEthereumAccount}
-					/>
-				}
-			/>
-			<Route
-				path="minting"
-				element={
-					<Mint
-						
+					<StartPage
+						p1Name = {p1Name} setP1Name  = {setP1Name} img1 = {img1} setTank1 = {setTank1}
+						p2Name = {p2Name} setP2Name = {setP2Name} img2 = {img2} setTank2 = {setTank2}
 					/>
 				}
 			/>
