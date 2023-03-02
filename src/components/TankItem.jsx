@@ -7,8 +7,6 @@ import Grid from '@mui/material/Grid';
 import { CardActionArea } from '@mui/material';
 
 export default function TankItem( props ) {
-	const isMint = props.isMint;
-
 	return (
 		<Card sx={{ 
 			maxWidth: '25rem', 
@@ -22,18 +20,6 @@ export default function TankItem( props ) {
 					image={props.img}
 					alt="green iguana"
 				/>
-				<CardContent>
-					<Grid container flex justifyContent="center" alignItems="center">
-						<TextField 
-							id="tankName-ipt" 
-							label={`Player${props.player} Name:`} 
-							variant="outlined"
-							value={props.pName}
-							onInput={(e) => props.setPName(e.target.value)}
-							disabled = {isMint}
-						/>
-					</Grid>
-				</CardContent>
 			</CardActionArea>
 		</Card>
 	);

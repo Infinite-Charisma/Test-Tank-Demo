@@ -18,6 +18,7 @@ export default function CustomDialog( props ) {
 	const winnerName = props.winnerName;
 	
 	const handleClose = () => {
+		localStorage.clear();
 		setOpen(false);
 	};
 
@@ -46,7 +47,12 @@ export default function CustomDialog( props ) {
 					</Grid>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={() => { console.log( window.location ); location.href="/"} } variant="contained">Restart</Button>
+					<Button 
+						variant="contained"
+						onClick={ () => { localStorage.clear(); location.href="/"} }
+					>
+						Restart
+					</Button>
 					<Button onClick={handleClose} variant="contained">Close</Button>
 				</DialogActions>
 			</Dialog>

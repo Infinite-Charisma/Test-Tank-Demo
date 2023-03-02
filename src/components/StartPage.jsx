@@ -14,16 +14,13 @@ import TankItem from './TankItem';
 import Tank from '../Tank';
 
 export default function StartPage( props ) {
-	const pName1 = props.p1Name;
-	const pName2 = props.p2Name;
-	const setTank1 = props.setTank1;
-	const setTank2 = props.setTank2;
-	const [isMint, setIsMint] = useState( false );
-
+	const pName1 = localStorage.getItem( 'tank1_name' );
+	const pName2 = localStorage.getItem( 'tank2_name' );
+	const img1 = localStorage.getItem( 'tank1_img' );
+	const img2 = localStorage.getItem( 'tank2_img' );
+	
 	const handleMint = () => {
         if( ( pName1 && pName2 ) && ( pName1 !== pName2 ) ) {
-			setIsMint( true );
-
 			let tmp1 = new Tank( pName1 );
 			let tmp2 = new Tank( pName2 );
 
@@ -79,48 +76,29 @@ export default function StartPage( props ) {
 						}}
 					>
 						<TankItem 
-							player={1} 
-							pName = {pName1} setPName = {props.setP1Name}
-							img = {props.img1}
-							isMint = {isMint}
+							pName = {pName1}
+							img = { img1 }
 						/>
-						{
-							isMint 
-							? <Fab variant="extended" sx={{
-									width: "15rem",
-									height: "5rem",
-									backgroundColor: 'white',
-									marginTop: '23vh'
-								}}
+						<Fab variant="extended" sx={{
+								width: "15rem",
+								height: "5rem",
+								backgroundColor: 'white',
+								marginTop: '23vh',
+								fontSize: '2.5rem',
+							}}
 
-								onClick = { () => {
-									setTimeout(() => {
-										location.href = "battle";
-									}, 200);
-								}}
-							>
-								<FortIcon sx={{ mr: 1 }} />
-								V S
-							</Fab>
-
-							: <Fab variant="extended" sx={{
-									width: "15rem",
-									height: "5rem",
-									backgroundColor: 'white',
-									marginTop: '23vh'
-								}}
-								disabled = { !(pName1 && pName2) || (pName1 === pName2) }
-								onClick = { handleMint }
-							>
-								<AutoAwesomeIcon sx={{ mr: 1 }} />
-								Mint
-							</Fab>
-						}
+							onClick = { () => {
+								setTimeout(() => {
+									location.href = "battle";
+								}, 200);
+							}}
+						>
+							<FortIcon sx={{ mr: 1, fontSize: '2.5rem' }} />
+							V S
+						</Fab>
 						<TankItem 
-							player={2}
-							pName = {pName2} setPName = {props.setP2Name}
-							img = {props.img2}
-							isMint = {isMint}
+							pName = {pName2}
+							img = { img2 }
 						/>
 					</Box>
 				</Grid>

@@ -13,9 +13,6 @@ export default class Tank {
         
         this._power = 0;
         this._isWinner = false;
-
-        this.setProperties();
-        this.setPoser();
     }
 
     get owner () {
@@ -74,18 +71,12 @@ export default class Tank {
         this._isWinner = val;
     }
 
-    setProperties(){
-        this.health = this.getProperty( 0.3, 0.4 );
-        this.attack = this.getProperty( 0.1, 0.3 );
-        this.shield = this.getProperty( 0, 0.2 );
-        this.speed = this.getProperty( 0, 0.1 );
-    }
+    setProperties( _he, _at, _sh, _sp ){
+        this.health = _he;
+        this.attack = _at;
+        this.shield = _sh;
+        this.speed = _sp;
 
-    setPoser(){
-        this.power = Math.round( ( this.health + this.attack + this.shield + this.speed ) * 100000 ) / 100000;
-    }
-
-    getProperty( sVal, eVal) {
-        return Math.floor( ( Math.random() * ( eVal - sVal ) + sVal ) * 100000 ) / 100000;
+        this.power = Number(_he) + Number(_at) + Number(_sh) + Number(_sp);
     }
 }

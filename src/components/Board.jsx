@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import CustomDialog from "./CustomDialog";
 import * as C from '../const';
+import Tank from '../Tank';
 
 export default function Board( props ) {
 	let resultMatrix = [];          // Map
@@ -17,14 +18,28 @@ export default function Board( props ) {
 	let leftDirection;              // Left Direction
 	let rightDirection;             // Right Direction
 
-	let tank1 = localStorage.getItem( window.btoa( window.btoa( "tank player1" ) ) );       // Tanks for match
-	let tank2 = localStorage.getItem( window.btoa( window.btoa( "tank player2" ) ) );
+	let tank1Name = localStorage.getItem("tank1_name");
+	let tank1Health = localStorage.getItem("tank1_health");
+	let tank1Attack = localStorage.getItem("tank1_attack");
+	let tank1Shield = localStorage.getItem("tank1_shield");
+	let tank1Speed = localStorage.getItem("tank1_speed");
+	let tank1Power = tank1Health + tank1Attack + tank1Shield + tank1Speed;
 	
-	let tank1Obj = JSON.parse( window.atob( window.atob( tank1 ) ) );
-	let tank2Obj = JSON.parse( window.atob( window.atob( tank2 ) ) );
+	let tank2Name = localStorage.getItem("tank2_name");
+	let tank2Health = localStorage.getItem("tank2_health");
+	let tank2Attack = localStorage.getItem("tank2_attack");
+	let tank2Shield = localStorage.getItem("tank2_shield");
+	let tank2Speed = localStorage.getItem("tank2_speed");
+	let tank2Power = tank2Health + tank2Attack + tank2Shield + tank2Speed;
+
+	let tank1Obj = new Tank( tank1Name );
+	let tank2Obj = new Tank( tank2Name );
 
 	const [ winnerName, setWinnerName ] = useState( "" );
 	const [ open, setOpen ] = useState( false );
+
+	tank1Obj.setProperties( tank1Health, tank1Attack, tank1Shield, tank1Speed );
+	tank2Obj.setProperties( tank2Health, tank2Attack, tank2Shield, tank2Speed );
 
 	/************************************************************************/
 	//************************       Tank Battle      ***********************/
@@ -335,6 +350,7 @@ export default function Board( props ) {
 				}
 			}, 50);
 
+			console.log(tank1Obj, tank2Obj);
 			tank1Obj._power > tank2Obj._power ? tank1Obj._isWinner = true : tank2Obj._isWinner = true;
 			
 			if( tank1Obj._isWinner ) setWinnerName( tank1Obj._owner );

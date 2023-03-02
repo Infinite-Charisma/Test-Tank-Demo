@@ -35,29 +35,30 @@ export default function Mint( props ) {
 		return ( url + i + ".jpg" );
 	});
 	const account = localStorage.getItem( "tank_account" ) ? localStorage.getItem( "tank_account" ) : null;
-	const tank1 = "tank1";
-	const [ pName, setPName ] = useState( "" )
+	const tank = props.player === 1 ? "tank1" : "tank2";
+	const [ pName, setPName ] = useState( "" );
+	//const []
 	const [ curTank, setCurTank ] = useState( tanks[2] );
 	const [ health, setHealth ] = useState(0);
 	const [ attack, setAttack ] = useState(0);
 	const [ shield, setShield ] = useState(0);
 	const [ speed, setSpeed ] = useState(0);
-	const [ power, setPower ] = useState(0);
 
 	function selectCurTank( e, v ){
 		setCurTank( v );
+		localStorage.setItem( `${tank}_img`, v );
 	}
 
 	function setProperties(){
-        localStorage.setItem( `${tank1}_health`, getProperty( 0.3, 0.4 ) );
-		localStorage.setItem( `${tank1}_attack`, getProperty( 0.1, 0.3 ) );
-		localStorage.setItem( `${tank1}_shield`, getProperty( 0, 0.2 ) );
-		localStorage.setItem( `${tank1}_speed`, getProperty( 0, 0.1 ) );
+        localStorage.setItem( `${tank}_health`, getProperty( 0.3, 0.4 ) );
+		localStorage.setItem( `${tank}_attack`, getProperty( 0.1, 0.3 ) );
+		localStorage.setItem( `${tank}_shield`, getProperty( 0, 0.2 ) );
+		localStorage.setItem( `${tank}_speed`, getProperty( 0, 0.1 ) );
 
-		setHealth ( localStorage.getItem( `${tank1}_health` ) );
-        setAttack ( localStorage.getItem( `${tank1}_attack` ) );
-		setShield ( localStorage.getItem( `${tank1}_shield` ) );
-        setSpeed ( localStorage.getItem( `${tank1}_speed` ) );
+		setHealth ( localStorage.getItem( `${tank}_health` ) );
+        setAttack ( localStorage.getItem( `${tank}_attack` ) );
+		setShield ( localStorage.getItem( `${tank}_shield` ) );
+        setSpeed ( localStorage.getItem( `${tank}_speed` ) );
     }
 
     function getProperty( sVal, eVal) {
@@ -69,6 +70,7 @@ export default function Mint( props ) {
 	}
 
 	useEffect(() => {
+		localStorage.setItem( `${tank}_img`, curTank );
 		setProperties();
 	}, []);
 
@@ -115,13 +117,13 @@ export default function Mint( props ) {
 							}
 						>
 							{ 
-								tanks.map((tank, i) => (
+								tanks.map((t, i) => (
 									<ListItemButton key={i} onClick={ (e) => {
-										selectCurTank( e, tank )
+										selectCurTank( e, t )
 										handleSetProperty( e );
 									}}>
 										<ListItemIcon>
-											<Avatar alt="Travis Howard" src={tank} />
+											<Avatar alt="Travis Howard" src={t} />
 										</ListItemIcon>
 										<ListItemText primary={ `Tank ${ i+1 }` } />
 									</ListItemButton>
@@ -179,7 +181,7 @@ export default function Mint( props ) {
 											value={pName}
 											onInput={(e) => {
 												setPName(e.target.value);
-												localStorage.setItem( "tank1_name", e.target.value );
+												localStorage.setItem( `${tank}_name`, e.target.value );
 											}}
 										/>
 										<Button variant="extended" sx={{
@@ -190,7 +192,11 @@ export default function Mint( props ) {
 													? props.player === 1 ? "/minting/2" : "/start"
 													: null
 											}
-											disabled = { !pName }
+											disabled = { 
+												props.player === 2
+													? (pName === localStorage.getItem( "tank1_name" )) || !pName
+													: false || !pName
+	 										}
 										>
 											<AutoAwesomeIcon sx={{ mr: 1 }} />
 											Mint
