@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
-import Box from '@mui/material/Box';
+import React, { Fragment } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,9 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
-import { deepOrange } from '@mui/material/colors';
 
 export default function CustomDialog( props ) {
 	const open = props.open;

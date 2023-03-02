@@ -1,32 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import TextField from '@mui/material/TextField';
-import FortIcon from '@mui/icons-material/Fort';
-import SaveIcon from '@mui/icons-material/Save';
-import Fab from '@mui/material/Fab';
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import SendIcon from '@mui/icons-material/Send';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CardActions from '@mui/material/CardActions';
 import CardActionArea from '@mui/material/CardActionArea';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 
 export default function Mint( props ) {
 	const url = `../imgs/mintTanks/mintTank-`;

@@ -4,7 +4,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import FortIcon from '@mui/icons-material/Fort';
 import SaveIcon from '@mui/icons-material/Save';
 import Fab from '@mui/material/Fab';
