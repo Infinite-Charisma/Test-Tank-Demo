@@ -30,9 +30,8 @@ const StyledButton = styled(Button)({
 
 export default function Home(props) {
 	const isMetamaskInstalled = props.isMetamaskInstalled;
-	const ethereumAccount = props.ethereumAccount;
 	const setIsMetamaskInstalled = props.setIsMetamaskInstalled;
-	const setEthereumAccount = props.setEthereumAccount;
+	const [account, setAccount] = useState(null);
 	
 	useEffect(() => {
 		if(window.ethereum){
@@ -48,7 +47,8 @@ export default function Home(props) {
 				method: "eth_requestAccounts",
 			})
 			.then((accounts) => {
-				setEthereumAccount(accounts[0]);
+				setAccount(accounts[0]);
+				localStorage.setItem('tank_account', accounts[0]);
 			})
 			.catch((error) => {
 				console.log(`Something went wrong: ${error}`);
@@ -62,7 +62,8 @@ export default function Home(props) {
 				params: {}
             })
             .then((accounts) => {
-                setEthereumAccount(null);
+				setAccount(accounts[0]);
+				localStorage.setItem('tank_account', "");
             })
             .catch((error) => {
                 console.log(`Something went wrong: ${error}`);
@@ -95,7 +96,7 @@ export default function Home(props) {
 					}} 
 				>
 					<Button variant="contained"
-						onClick = { ethereumAccount ? disconnectWallet : connectWallet }
+						onClick = { account ? disconnectWallet : connectWallet }
 						sx={{
 							width: '200px',
 							wordWrap: "break-word"
@@ -103,9 +104,9 @@ export default function Home(props) {
 					>
 						{ 
 							isMetamaskInstalled 
-								? ethereumAccount === null
+								? account === null
 									? 'Connect'
-									: displayAddress( ethereumAccount )
+									: displayAddress( account )
 								: 'Install your metamask wallet.'
 						}
 					</Button>
@@ -141,7 +142,7 @@ export default function Home(props) {
 						variant="contained" 
 						color="secondary" 
 						endIcon={<SendIcon />}
-						href="minting"
+						href="/minting/1"
 					>
 							Next
 					</StyledButton>
