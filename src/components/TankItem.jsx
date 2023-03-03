@@ -3,9 +3,12 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
 
-export default function TankItem( props ) {
+const TankItem = ( props ) => {
+	const account = localStorage.getItem( 'tank_account' );
+	
 	return (
-		<Card sx={{ 
+		account
+		? <Card sx={{ 
 			maxWidth: '25rem', 
 			maxHeight: '35rem',
 			margin: '30px'
@@ -19,5 +22,10 @@ export default function TankItem( props ) {
 				/>
 			</CardActionArea>
 		</Card>
+		: <Button variant="contained" href="/">
+			Redirect
+		</Button>
 	);
 }
+
+export default TankItem;

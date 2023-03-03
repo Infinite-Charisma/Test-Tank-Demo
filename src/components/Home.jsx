@@ -1,4 +1,4 @@
-// Toggle connection to MetaMask
+ // Toggle connection to MetaMask
 import React, { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
@@ -10,6 +10,13 @@ import Grid from '@mui/material/Grid';
 import SendIcon from '@mui/icons-material/Send';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+// for Notification
+const Alert = React.forwardRef(function Alert(props, ref) {
+	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const StyledButton = styled(Button)({
 	position: 'absolute',
@@ -21,10 +28,26 @@ const StyledButton = styled(Button)({
 	width: '120px'
 });
 
-export default function Home(props) {
-	const isMetamaskInstalled = props.isMetamaskInstalled;
-	const setIsMetamaskInstalled = props.setIsMetamaskInstalled;
-	const [account, setAccount] = useState(null);
+const Home = (props) => {
+	// for notification ~from here
+	const [state, setState] = React.useState({
+		snack: false,
+		vertical: 'bottom',
+		horizontal: 'right',
+		message: 'Wallet Connected',
+		color: 'success'
+	});
+
+	const { vertical, horizontal, snack, message, color } = state;
+
+	const handleSnackClose = () => {
+		setState({ ...state, snack: false });
+	};
+	// for notification ~end
+
+	const isMetamaskInstalled = props.isMetamaskInstalled; 			// metamask is installed
+	const setIsMetamaskInstalled = props.setIsMetamaskInstalled;	
+	const [account, setAccount] = useState(null);					// wallet account initialize
 	
 	useEffect(() => {
 		if(window.ethereum){
@@ -32,8 +55,8 @@ export default function Home(props) {
 		}
 	},[]);
 
-	//Does the User have an Ethereum wallet/account?
-	async function connectWallet(){
+	//Connect to User Wallet
+	const connectWallet = async () => {
 		//to get around type checking
 		window.ethereum
 			.request({
@@ -42,28 +65,62 @@ export default function Home(props) {
 			.then((accounts) => {
 				setAccount(accounts[0]);
 				localStorage.setItem('tank_account', accounts[0]);
+				console.log('Wallet Connected');
+
+				setState({ 
+					snack: true, 
+					message: 'Wallet Connected',
+					vertical: 'bottom',
+					horizontal: 'right',
+					color: 'success'
+				});
 			})
 			.catch((error) => {
 				console.log(`Something went wrong: ${error}`);
+				setState({ 
+					snack: true, 
+					message: 'Wallet Connected',
+					vertical: 'bottom',
+					horizontal: 'right',
+					color: 'warning'
+				});
 			});
 	}
 
-	function disconnectWallet(){
+	//Disconnect User Wallet
+	const disconnectWallet = async () => {
 		window.ethereum
             .request({
                 method: "eth_requestAccounts",
 				params: {}
             })
             .then((accounts) => {
-				setAccount(accounts[0]);
+				setAccount(null);
 				localStorage.setItem('tank_account', "");
+				console.log('Wallet Disconnected');
+				
+				setState({ 
+					snack: true, 
+					message: 'Wallet Disconnected',
+					vertical: 'bottom',
+					horizontal: 'right',
+					color: 'success'
+				});
             })
             .catch((error) => {
                 console.log(`Something went wrong: ${error}`);
+				setState({ 
+					snack: true, 
+					message: 'Wallet Disonnected',
+					vertical: 'bottom',
+					horizontal: 'right',
+					color: 'warning'
+				});
             });
 	}
 
-	function displayAddress( _val ){
+	// For printing wallet address to connect button
+	const displayAddress = ( _val ) => {
 		let tmp = _val;
 
 		if( _val.length ){
@@ -141,6 +198,19 @@ export default function Home(props) {
 					</StyledButton>
 				</Toolbar>
 			</AppBar>
+			<Snackbar 
+				anchorOrigin={{ vertical, horizontal }}
+				open={snack} 
+				autoHideDuration={3000} 
+				onClose={handleSnackClose}
+				key={vertical + horizontal}
+			>
+				<Alert onClose={handleSnackClose} severity={color} sx={{ width: '100%' }}>
+					{ message }
+				</Alert>
+			</Snackbar>
 		</Grid>
 	);
 }
+
+export default Home;

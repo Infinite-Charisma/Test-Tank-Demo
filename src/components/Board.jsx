@@ -1,10 +1,34 @@
 import React, { useState, useEffect } from "react";
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
 import CustomDialog from "./CustomDialog";
 import * as C from '../const';
 import Tank from '../Tank';
 
-export default function Board( props ) {
+// for Notification
+const Alert = React.forwardRef(function Alert(props, ref) {
+	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+const Board = ( props ) => {
+	// for notification ~from here
+	const [state, setState] = React.useState({
+		snack: false,
+		vertical: 'bottom',
+		horizontal: 'right',
+		message: 'Wallet Connected',
+		color: 'success'
+	});
+
+	const { vertical, horizontal, snack, message, color } = state;
+
+	const handleSnackClose = () => {
+		setState({ ...state, snack: false });
+	};
+	// for notification ~end
+
 	let resultMatrix = [];          // Map
 	let resultPath = [];            // Total Trace : shortest path
 	let resultStartPos = [];        // Start Position of Tank1
@@ -18,29 +42,29 @@ export default function Board( props ) {
 	let leftDirection;              // Left Direction
 	let rightDirection;             // Right Direction
 
-	let tank1Name = localStorage.getItem("tank1_name");
+	let tank1Name = localStorage.getItem("tank1_name");		// importing data from local storage
 	let tank1Health = localStorage.getItem("tank1_health");
 	let tank1Attack = localStorage.getItem("tank1_attack");
 	let tank1Shield = localStorage.getItem("tank1_shield");
 	let tank1Speed = localStorage.getItem("tank1_speed");
-	let tank1Power = tank1Health + tank1Attack + tank1Shield + tank1Speed;
 	
 	let tank2Name = localStorage.getItem("tank2_name");
 	let tank2Health = localStorage.getItem("tank2_health");
 	let tank2Attack = localStorage.getItem("tank2_attack");
 	let tank2Shield = localStorage.getItem("tank2_shield");
 	let tank2Speed = localStorage.getItem("tank2_speed");
-	let tank2Power = tank2Health + tank2Attack + tank2Shield + tank2Speed;
+	
+	const account = localStorage.getItem("tank_account");
 
-	let tank1Obj = new Tank( tank1Name );
+	let tank1Obj = new Tank( tank1Name );					// generate new tank for player
 	let tank2Obj = new Tank( tank2Name );
 
 	const [ winnerName, setWinnerName ] = useState( "" );
-	const [ open, setOpen ] = useState( false );
-
+	const [ open, setOpen ] = useState( false );			// Display Dialog Flg for Game over
+	
 	tank1Obj.setProperties( tank1Health, tank1Attack, tank1Shield, tank1Speed );
 	tank2Obj.setProperties( tank2Health, tank2Attack, tank2Shield, tank2Speed );
-
+	
 	/************************************************************************/
 	//************************       Tank Battle      ***********************/
 	/************************************************************************/
@@ -50,7 +74,7 @@ export default function Board( props ) {
 	 * @parameter startCols: min x, endCols: max x, startRows: min y, endRows: max y
 	 * @return random coordination
 	 */
-	function getCoordination( startCols, endCols, startRows, endRows ) {
+	const getCoordination = ( startCols, endCols, startRows, endRows ) => {
 		return [
 			Math.floor( Math.random() * ( endCols - startCols ) + startCols ),
 			Math.floor( Math.random() * ( endRows - startRows ) + startRows )
@@ -62,7 +86,7 @@ export default function Board( props ) {
 	 * @parameter mRows: Map Rows, mCols: Map Columns.
 	 * @return none.
 	 */
-	function random( mRows, mCols ) {
+	const random = ( mRows, mCols ) => {
 		let matrix, path,
 			box = document.getElementById("root"),
 			date = new Date();
@@ -86,7 +110,7 @@ export default function Board( props ) {
 	 * @parameter matrix: initialized Map, start: Start Position..., end: ...
 	 * @return none
 	 */
-	function custom(matrix, start, end) {
+	const custom = (matrix, start, end) => {
 		const cols = mapSizeCols,
 				rows = mapSizeRows,
 				box = document.getElementById("root");
@@ -111,7 +135,7 @@ export default function Board( props ) {
 	 * @parameter matrix: Map, start: Start Position of Tank1, end: ... , _box: Battle Field.
 	 * @return none.
 	 */
-	function showMatrix(matrix, start, end, _box) {
+	const showMatrix = (matrix, start, end, _box) => {
 		resultMatrix = matrix;
 		resultStartPos = start;
 		resultEndPos = end;
@@ -159,7 +183,7 @@ export default function Board( props ) {
 	 * @parameter arr: matrix for Map, start: Positin for tank1, end: Position for tank2
 	 * @return shortest path []
 	 */
-	function shortestPath(arr, start, end) {
+	const shortestPath = (arr, start, end) => {
 		arr = arr.map(a => [...a]); //clone matrix, so we can re-use it by updating which coordinates we've visited
 		if (!start) start = [0, 0];
 		if (!end) end = [arr[0].length-1, arr.length-1];
@@ -200,7 +224,7 @@ export default function Board( props ) {
 	 * @parameter t: constant value
 	 * @return constant string.
 	 */
-	function className( t ) {
+	const className = ( t ) => {
 		switch (t) {
 			case C.BLOCK_NUM: return C.BLOCK; 
 			case C.EMPTY_NUM: return C.EMPTY; 
@@ -219,7 +243,7 @@ export default function Board( props ) {
 	 * @parameter none
 	 * @return none
 	 */
-	function forwardTank() {
+	const forwardTank = () => {
 		let i=0, j=0;
 		let block;    
 		let cellList = document.getElementsByClassName( "element" );
@@ -250,7 +274,7 @@ export default function Board( props ) {
 		let middlePos = Math.floor( resultPath.length / 2 );
 		let x1, y1, x2, y2;
 		
-		function stepInterval( lastPoses ) {
+		const stepInterval = ( lastPoses ) => {
 			const stepInterval = setInterval( () => {
 				if( totalLength % 2 ) {
 					if(  tank1Step > middlePos ) {
@@ -320,7 +344,7 @@ export default function Board( props ) {
 			}, 300 );
 		}
 
-		stepInterval( function( lastPoses ) {
+		stepInterval( ( lastPoses ) => {
 			startLastPos = lastPoses[0];
 			endLastPos = lastPoses[1];
 
@@ -352,17 +376,15 @@ export default function Board( props ) {
 
 			console.log(tank1Obj, tank2Obj);
 			tank1Obj._power > tank2Obj._power ? tank1Obj._isWinner = true : tank2Obj._isWinner = true;
+			setTimeout(() => {
+				setOpen( true );
+			}, 1500);
 			
 			if( tank1Obj._isWinner ) setWinnerName( tank1Obj._owner );
 			else setWinnerName( tank2Obj._owner );
 
 			console.log( tank1Obj );
 			console.log( tank2Obj );
-
-
-			setTimeout(() => {
-				setOpen( true );
-			}, 1500);
 		});
 	}
 
@@ -371,7 +393,7 @@ export default function Board( props ) {
 	 * @parameter x1, y1: Coordination of Pos1, x2, y2: Coordination of Pos2.
 	 * @return none
 	 */
-	function findDirection( x1, y1, x2, y2 ) {
+	const findDirection = ( x1, y1, x2, y2 ) => {
 		topDirection = x1 == x2 && y1 > y2;
 		bottomDirection = x1 == x2 && y1 < y2;
 		leftDirection = y1 == y2 && x1 > x2;
@@ -383,7 +405,7 @@ export default function Board( props ) {
 	 * @parameter t1: current position of tank1, t2: current position of tank2, ts: Count about steps of of Tank1
 	 * @return none
 	 */
-	function findTarget( t1, t2, t1s ) {
+	const findTarget = ( t1, t2, t1s ) => {
 		let tank1Trace = t1;
 		let tank2Trace = t2;
 		let tank1Step = t1s;
@@ -467,7 +489,7 @@ export default function Board( props ) {
 	 * @parameter block: a piece of Map, rotateDeg: angle degree to rotate.
 	 * @return className as string.
 	 */
-	function rotateTank( block, rotateDeg, flg ) {
+	const rotateTank = ( block, rotateDeg, flg ) => {
 		switch ( flg ) {
 			case C.BLOCK_NUM: block.className = "element cell-" + C.BLOCK; break;
 			case C.EMPTY_NUM: block.className = "element cell-" + C.EMPTY; break;
@@ -486,11 +508,15 @@ export default function Board( props ) {
 	 * @parameter cols: Column Size of Map, rows: Row Size of Map
 	 * @return none
 	 */
-	function init( cols, rows ) {
-		mapSizeRows = rows, mapSizeCols = cols;
+	const init = ( cols, rows ) => {
+		if( account ){
+			mapSizeRows = rows, mapSizeCols = cols;
 
-		while( resultPath.length < 5 ) {
-			random( mapSizeRows, mapSizeCols );
+			while( resultPath.length < 5 ) {
+				random( mapSizeRows, mapSizeCols );
+			}
+		}else{
+
 		}
 	}
 
@@ -503,7 +529,21 @@ export default function Board( props ) {
 			<CustomDialog 
 				open = { open } setOpen = { setOpen }
 				winnerName = { winnerName }
+				tankMintContractWithSigner = { props.tankMintContractWithSigner }
 			/>
+			<Snackbar 
+				anchorOrigin={{ vertical, horizontal }}
+				open={snack} 
+				autoHideDuration={3000} 
+				onClose={handleSnackClose}
+				key={vertical + horizontal}
+			>
+				<Alert onClose={handleSnackClose} severity={color} sx={{ width: '100%' }}>
+					{ message }
+				</Alert>
+			</Snackbar>
 		</div>
 	);
 }
+
+export default Board;
