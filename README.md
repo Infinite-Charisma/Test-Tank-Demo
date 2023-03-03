@@ -1,4 +1,4 @@
-#Tank Battle (Test Project)
+# Tank Battle (Test Project)
 
 This is tank battle project interacting with solidity smart contract deployed to Polygon Mumbai Testnet.
 Players can mint their tank NFTs on the first page. Each tank has their own properties like attack, speed and shield.
